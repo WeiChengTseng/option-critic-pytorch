@@ -1,6 +1,7 @@
 import numpy as np
 import argparse
 import torch
+import wandb
 from copy import deepcopy
 
 from option_critic import OptionCriticFeatures, OptionCriticConv
@@ -101,6 +102,10 @@ parser.add_argument('--switch-goal',
 
 
 def run(args):
+    # wandb.init(project="option-critic",
+    #         config=dict(args),
+    #         tags=['seed{}'.format(args.seed)],
+    #         name=args['ppo']['output_ckpt'].split('/')[-2])
     env, is_atari = make_env(args.env)
     option_critic = OptionCriticConv if is_atari else OptionCriticFeatures
     device = torch.device(
