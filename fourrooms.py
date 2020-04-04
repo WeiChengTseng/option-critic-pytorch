@@ -7,10 +7,11 @@ import numpy as np
 
 logger = logging.getLogger(__name__)
 
+
 class Fourrooms(gym.Env):
     metadata = {
         'render.modes': ['human', 'rgb_array'],
-        'video.frames_per_second' : 50
+        'video.frames_per_second': 50
     }
 
     def __init__(self):
@@ -30,13 +31,22 @@ w           w
 w     w     w
 wwwwwwwwwwwww
 """
-        self.occupancy = np.array([list(map(lambda c: 1 if c=='w' else 0, line)) for line in layout.splitlines()])
+        self.occupancy = np.array([
+            list(map(lambda c: 1 if c == 'w' else 0, line))
+            for line in layout.splitlines()
+        ])
 
         # From any state the agent can perform one of four actions, up, down, left or right
         self.action_space = spaces.Discrete(4)
-        self.observation_space = spaces.Box(low=0., high=1., shape=(np.sum(self.occupancy == 0),))
+        self.observation_space = spaces.Box(
+            low=0., high=1., shape=(np.sum(self.occupancy == 0), ))
 
-        self.directions = [np.array((-1,0)), np.array((1,0)), np.array((0,-1)), np.array((0,1))]
+        self.directions = [
+            np.array((-1, 0)),
+            np.array((1, 0)),
+            np.array((0, -1)),
+            np.array((0, 1))
+        ]
         self.rng = np.random.RandomState(1234)
 
         self.tostate = {}
@@ -44,11 +54,11 @@ wwwwwwwwwwwww
         for i in range(13):
             for j in range(13):
                 if self.occupancy[i, j] == 0:
-                    self.tostate[(i,j)] = statenum
+                    self.tostate[(i, j)] = statenum
                     statenum += 1
-        self.tocell = {v:k for k,v in self.tostate.items()}
+        self.tocell = {v: k for k, v in self.tostate.items()}
 
-        self.goal = 62 # East doorway
+        self.goal = 62  # East doorway
         self.init_states = list(range(self.observation_space.shape[0]))
         self.init_states.remove(self.goal)
         self.ep_steps = 0
@@ -109,9 +119,10 @@ wwwwwwwwwwwww
 
         nextcell = tuple(self.currentcell + self.directions[action])
         if not self.occupancy[nextcell]:
-            if self.rng.uniform() < 1/3.:
+            if self.rng.uniform() < 1 / 3.:
                 empty_cells = self.empty_around(self.currentcell)
-                self.currentcell = empty_cells[self.rng.randint(len(empty_cells))]
+                self.currentcell = empty_cells[self.rng.randint(
+                    len(empty_cells))]
             else:
                 self.currentcell = nextcell
 
@@ -120,10 +131,12 @@ wwwwwwwwwwwww
         reward = float(done)
 
         if not done and self.ep_steps >= 1000:
-            done = True ; reward = 0.0
+            done = True
+            reward = 0.0
 
         return self.get_state(state), reward, done, None
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     env = Fourrooms()
     env.seed(3)

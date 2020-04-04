@@ -33,18 +33,24 @@ class FrameStack(FrameStack_):
         assert len(self.frames) == self.k
         return LazyFrames(list(self.frames))
 
+
 def make_env(env_name):
 
     if env_name == 'fourrooms':
         return Fourrooms(), False
 
     env = gym.make(env_name)
-    is_atari = hasattr(gym.envs, 'atari') and isinstance(env.unwrapped, gym.envs.atari.atari_env.AtariEnv)
+    is_atari = hasattr(gym.envs, 'atari') and isinstance(
+        env.unwrapped, gym.envs.atari.atari_env.AtariEnv)
     if is_atari:
-        env = AtariPreprocessing(env, grayscale_obs=True, scale_obs=True, terminal_on_life_loss=True)
+        env = AtariPreprocessing(env,
+                                 grayscale_obs=True,
+                                 scale_obs=True,
+                                 terminal_on_life_loss=True)
         env = TransformReward(env, lambda r: np.clip(r, -1, 1))
         env = FrameStack(env, 4)
     return env, is_atari
+
 
 def to_tensor(obs):
     obs = np.asarray(obs)

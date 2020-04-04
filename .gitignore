@@ -10,3 +10,5 @@ settings.json
 *.pyc
 runs/*
 analysis/*
+.vscode
+wandb
