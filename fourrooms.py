@@ -17,20 +17,20 @@ class Fourrooms(gym.Env):
     def __init__(self):
 
         layout = """\
-wwwwwwwwwwwww
-w     w     w
-w     w     w
-w           w
-w     w     w
-w     w     w
-ww wwww     w
-w     www www
-w     w     w
-w     w     w
-w           w
-w     w     w
-wwwwwwwwwwwww
-"""
+                wwwwwwwwwwwww
+                w     w     w
+                w     w     w
+                w           w
+                w     w     w
+                w     w     w
+                ww wwww     w
+                w     www www
+                w     w     w
+                w     w     w
+                w           w
+                w     w     w
+                wwwwwwwwwwwww
+                """
         self.occupancy = np.array([
             list(map(lambda c: 1 if c == 'w' else 0, line))
             for line in layout.splitlines()
