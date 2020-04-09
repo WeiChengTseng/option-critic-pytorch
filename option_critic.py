@@ -4,7 +4,7 @@ from torch.distributions import Categorical, Bernoulli
 
 from math import exp
 import numpy as np
-
+import pdb
 from utils import to_tensor
 
 
@@ -204,6 +204,8 @@ def critic_loss(model, model_prime, data_batch, args):
     next_states = model.get_state(to_tensor(next_obs)).squeeze(0)
     next_termination_probs = model.get_terminations(next_states).detach()
     next_options_term_prob = next_termination_probs[batch_idx, options]
+
+    pdb.set_trace()
 
     # Now we can calculate the update target gt
     gt = rewards + masks * args.gamma * \
