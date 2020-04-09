@@ -205,7 +205,6 @@ def critic_loss(model, model_prime, data_batch, args):
     next_termination_probs = model.get_terminations(next_states).detach()
     next_options_term_prob = next_termination_probs[batch_idx, options]
 
-    pdb.set_trace()
 
     # Now we can calculate the update target gt
     gt = rewards + masks * args.gamma * \
@@ -232,6 +231,8 @@ def actor_loss(obs, option, logp, entropy, reward, done, next_obs, model,
     # Target update gt
     gt = reward + (1 - done) * args.gamma * \
         ((1 - next_option_term_prob) * next_Q_prime[option] + next_option_term_prob  * next_Q_prime.max(dim=-1)[0])
+
+    pdb.set_trace()
 
     # The termination loss
     termination_loss = option_term_prob * (Q[option].detach() - Q.max(
